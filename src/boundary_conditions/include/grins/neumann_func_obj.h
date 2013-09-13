@@ -32,7 +32,7 @@
 #include "grins/var_typedefs.h"
 
 // libMesh
-#include "libmesh/point.h"
+#include "libmesh/tensor_tools.h"
 
 // C++
 #include <vector>
@@ -49,6 +49,7 @@ namespace GRINS
   class CachedValues;
 
   //! Base class for general, non-constant Neumann boundary conditions
+  template<typename FEShape = libMesh::Real>
   class NeumannFuncObj
   {
   public:
@@ -56,12 +57,14 @@ namespace GRINS
     NeumannFuncObj();
     
     virtual ~NeumannFuncObj();
-    
+   
+    typedef typename libMesh::TensorTools::IncrementRank<FEShape>::type OutputType;
+ 
     //! Returns the value of the implemented Neumann boundary condition
     /*! This will leverage the FEMContext to get variable values and derivatives through the
       side_value, side_gradient, etc. interfaces, for each quadrature point qp. */
-    virtual libMesh::Point value( const libMesh::FEMContext& context,
-				  const CachedValues& cache, const unsigned int qp );
+    virtual OutputType value( const libMesh::FEMContext& context,
+                              const CachedValues& cache, const unsigned int qp );
 
     //! Returns the value of the implemented Neumann boundary condition
     /*! This will leverage the FEMContext to get variable values and derivatives through the
@@ -69,14 +72,14 @@ namespace GRINS
       Returns the normal component of the Neumann value. Only to be used when flux vector is
       formulated implicitly in terms of normal component. By default, does nothing since
       it's only applicable in special cases. */
-    virtual libMesh::Real normal_value( const libMesh::FEMContext& context, const CachedValues& cache,
-					const unsigned int qp );
+    virtual FEShape normal_value( const libMesh::FEMContext& context, const CachedValues& cache,
+                                  const unsigned int qp );
     
     //! Returns the derivative with respect to the primary variable of the implemented Neumann boundary condition.
     /*! This will leverage the FEMContext to get variable values and derivatives through the
       side_value, side_gradient, etc. interfaces, for each quadrature point qp. */
-    virtual libMesh::Point derivative( const libMesh::FEMContext& context, const CachedValues& cache,
-				       const unsigned int qp );
+    virtual OutputType derivative( const libMesh::FEMContext& context, const CachedValues& cache,
+                                   const unsigned int qp );
 
     //! Returns the derivative with respect to the primary variable of the implemented Neumann boundary condition.
     /*! This will leverage the FEMContext to get variable values and derivatives through the
@@ -84,16 +87,16 @@ namespace GRINS
       Returns the normal component of the Neumann value. Only to be used when flux vector is
       formulated implicitly in terms of normal component. By default, does nothing since
       it's only applicable in special cases. */
-    virtual libMesh::Real normal_derivative( const libMesh::FEMContext& context, const CachedValues& cache,
-					     const unsigned int qp );
+    virtual FEShape normal_derivative( const libMesh::FEMContext& context, const CachedValues& cache,
+                                       const unsigned int qp );
 
     //! If needed, returns the derivative with respect to other variables in the system.
     /*! By default, does nothing. User should reimplement is this is needed.
       This will leverage the FEMContext to get variable values and derivatives through the
       side_value, side_gradient, etc. interfaces, for each quadrature point qp. */
-    virtual libMesh::Point derivative( const libMesh::FEMContext& context, const CachedValues& cache,
-				       const unsigned int qp, 
-				       const GRINS::VariableIndex jac_var );
+    virtual OutputType derivative( const libMesh::FEMContext& context, const CachedValues& cache,
+                                   const unsigned int qp, 
+                                   const GRINS::VariableIndex jac_var );
 
     //! If needed, returns the derivative with respect to other variables in the system.
     /*! By default, does nothing. User should reimplement is this is needed.
@@ -102,9 +105,9 @@ namespace GRINS
       Returns the normal component of the Neumann value. Only to be used when flux vector is
       formulated implicitly in terms of normal component. By default, does nothing since
       it's only applicable in special cases. */
-    virtual libMesh::Real normal_derivative( const libMesh::FEMContext& context, const CachedValues& cache,
-					     const unsigned int qp, 
-					     const GRINS::VariableIndex jac_var );
+    virtual FEShape normal_derivative( const libMesh::FEMContext& context, const CachedValues& cache,
+                                       const unsigned int qp, 
+                                       const GRINS::VariableIndex jac_var );
 
     const std::vector<VariableIndex>& get_other_jac_vars();
 

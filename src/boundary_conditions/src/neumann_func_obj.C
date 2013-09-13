@@ -33,82 +33,94 @@
 #include "grins/cached_values.h"
 
 // libMesh
+#include "libmesh/vector_value.h"
 #include "libmesh/fem_context.h"
 
 namespace GRINS
 {
-
-  NeumannFuncObj::NeumannFuncObj( )
+  template<typename FEShape>
+  NeumannFuncObj<FEShape>::NeumannFuncObj( )
   {
     return;
   }
 
-  NeumannFuncObj::~NeumannFuncObj( )
+  template<typename FEShape>
+  NeumannFuncObj<FEShape>::~NeumannFuncObj( )
   {
     return;
   }
 
-  libMesh::Point NeumannFuncObj::value( const libMesh::FEMContext&,
-					const CachedValues&,
-					const unsigned int )
+  template<typename FEShape>
+  typename NeumannFuncObj<FEShape>::OutputType NeumannFuncObj<FEShape>::value( const libMesh::FEMContext&,
+                                                                      const CachedValues&,
+                                                                      const unsigned int )
   {
     // By default, does nothing.
     /* \todo Should we libmesh_error() instead?*/
-    return libMesh::Point();
+    return typename NeumannFuncObj<FEShape>::OutputType();
   }
 
-  libMesh::Real NeumannFuncObj::normal_value( const libMesh::FEMContext&,
+  template<typename FEShape>
+  FEShape NeumannFuncObj<FEShape>::normal_value( const libMesh::FEMContext&,
 					      const CachedValues&,
 					      const unsigned int )
   {
     // By default, does nothing.
     /* \todo Should we libmesh_error() instead?*/
-    return 0.0;
+    return FEShape();
   }
 
-  libMesh::Point NeumannFuncObj::derivative( const libMesh::FEMContext&,
-					     const CachedValues&,
-					     const unsigned int )
+  template<typename FEShape>
+  typename NeumannFuncObj<FEShape>::OutputType NeumannFuncObj<FEShape>::derivative( const libMesh::FEMContext&,
+                                                                  const CachedValues&,
+                                                                  const unsigned int )
   {
     // By default, does nothing.
     /* \todo Should we libmesh_error() instead?*/
-    return libMesh::Point(0.0,0.0,0.0);
+    return typename NeumannFuncObj<FEShape>::OutputType();
   }
 
-  libMesh::Point NeumannFuncObj::derivative( const libMesh::FEMContext&,
-					     const CachedValues&,
-					     const unsigned int,
-					     const VariableIndex )
+  template<typename FEShape>
+  typename NeumannFuncObj<FEShape>::OutputType NeumannFuncObj<FEShape>::derivative( const libMesh::FEMContext&,
+                                                                  const CachedValues&,
+                                                                  const unsigned int,
+                                                                  const VariableIndex )
   {
     // By default, does nothing.
     /* \todo Should we libmesh_error() instead?*/
-    return libMesh::Point(0.0,0.0,0.0);
+    return typename NeumannFuncObj<FEShape>::OutputType();
   }
   
 
-  libMesh::Real NeumannFuncObj::normal_derivative( const libMesh::FEMContext&,
+  template<typename FEShape>
+  FEShape NeumannFuncObj<FEShape>::normal_derivative( const libMesh::FEMContext&,
 						   const CachedValues&,
 						   const unsigned )
   {
     // By default, does nothing.
     /* \todo Should we libmesh_error() instead?*/
-    return 0.0;
+    return FEShape();
   }
 
-  libMesh::Real NeumannFuncObj::normal_derivative( const libMesh::FEMContext&,
+  template<typename FEShape>
+  FEShape NeumannFuncObj<FEShape>::normal_derivative( const libMesh::FEMContext&,
 						   const CachedValues&,
 						   const unsigned int, 
 						   const VariableIndex )
   {
     // By default, does nothing.
     /* \todo Should we libmesh_error() instead?*/
-    return 0.0;
+    return FEShape();
   }
 
-  const std::vector<VariableIndex>& NeumannFuncObj::get_other_jac_vars()
+  template<typename FEShape>
+  const std::vector<VariableIndex>& NeumannFuncObj<FEShape>::get_other_jac_vars()
   {
     return _jac_vars;
   }
 
 } // namespace GRINS
 
+// Instantiate
+template class GRINS::NeumannFuncObj<libMesh::Real>;
+template class GRINS::NeumannFuncObj<libMesh::RealGradient>;
