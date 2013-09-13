@@ -36,6 +36,7 @@ libgrins_la_SOURCES += $(top_srcdir)/src/bc_handling/src/reacting_low_mach_navie
 # src/boundary_conditions files
 libgrins_la_SOURCES += $(top_srcdir)/src/boundary_conditions/src/boundary_conditions.C
 libgrins_la_SOURCES += $(top_srcdir)/src/boundary_conditions/src/bc_factory.C
+libgrins_la_SOURCES += $(top_srcdir)/src/boundary_conditions/src/neumann_func_obj_base.C
 libgrins_la_SOURCES += $(top_srcdir)/src/boundary_conditions/src/neumann_func_obj.C
 libgrins_la_SOURCES += $(top_srcdir)/src/boundary_conditions/src/parabolic_profile.C
 libgrins_la_SOURCES += $(top_srcdir)/src/boundary_conditions/src/gaussian_profile.C
@@ -165,6 +166,7 @@ include_HEADERS += $(top_srcdir)/src/bc_handling/include/grins/reacting_low_mach
 include_HEADERS += $(top_srcdir)/src/boundary_conditions/include/grins/bc_types.h
 include_HEADERS += $(top_srcdir)/src/boundary_conditions/include/grins/boundary_conditions.h
 include_HEADERS += $(top_srcdir)/src/boundary_conditions/include/grins/bc_factory.h
+include_HEADERS += $(top_srcdir)/src/boundary_conditions/include/grins/neumann_func_obj_base.h
 include_HEADERS += $(top_srcdir)/src/boundary_conditions/include/grins/neumann_func_obj.h
 include_HEADERS += $(top_srcdir)/src/boundary_conditions/include/grins/parabolic_profile.h
 include_HEADERS += $(top_srcdir)/src/boundary_conditions/include/grins/gaussian_profile.h
