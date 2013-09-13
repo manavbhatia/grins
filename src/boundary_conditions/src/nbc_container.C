@@ -26,7 +26,11 @@
 //--------------------------------------------------------------------------
 //--------------------------------------------------------------------------
 
+// This class
 #include "grins/nbc_container.h"
+
+// libMesh
+#include "libmesh/libmesh.h"
 
 namespace GRINS
 {
@@ -52,7 +56,7 @@ namespace GRINS
   }
 
   void NBCContainer::add_var_func_pair( VariableIndex var, 
-					std::tr1::shared_ptr<NeumannFuncObj> func )
+					std::tr1::shared_ptr<NeumannFuncObjBase> func )
   {
     if( _funcs.find(var) != _funcs.end() )
       {
@@ -64,7 +68,7 @@ namespace GRINS
     return;
   }
 
-  std::tr1::shared_ptr<NeumannFuncObj> NBCContainer::get_func( VariableIndex var ) const
+  std::tr1::shared_ptr<NeumannFuncObjBase> NBCContainer::get_func( VariableIndex var ) const
   {
     libmesh_assert( _funcs.find(var) != _funcs.end() );
     return _funcs.find(var)->second;

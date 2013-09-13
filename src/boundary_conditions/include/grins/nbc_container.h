@@ -29,7 +29,9 @@
 #ifndef GRINS_NBC_CONTAINER_H
 #define GRINS_NBC_CONTAINER_H
 
-#include "grins/neumann_func_obj.h"
+// GRINS
+#include "grins/var_typedefs.h"
+#include "grins/neumann_func_obj_base.h"
 
 namespace GRINS
 {
@@ -52,16 +54,16 @@ namespace GRINS
 
     //! Add boundary id and corresponding functor object to be applied on that boundary
     void add_var_func_pair( VariableIndex var, 
-			    std::tr1::shared_ptr<NeumannFuncObj> func );
+			    std::tr1::shared_ptr<NeumannFuncObjBase> func );
 
     BoundaryID get_bc_id() const;
 
-    std::tr1::shared_ptr<NeumannFuncObj> get_func( VariableIndex var ) const;
+    std::tr1::shared_ptr<NeumannFuncObjBase> get_func( VariableIndex var ) const;
 
   protected:
     
     BoundaryID _bc_id;
-    std::map<VariableIndex,std::tr1::shared_ptr<NeumannFuncObj> > _funcs;
+    std::map<VariableIndex,std::tr1::shared_ptr<NeumannFuncObjBase> > _funcs;
 
   };
 
