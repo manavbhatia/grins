@@ -206,7 +206,7 @@ namespace GRINS
                                           const bool request_jacobian,
                                           const VariableIndex var,
                                           const libMesh::Real sign,
-                                          const std::tr1::shared_ptr<NeumannFuncObj> neumann_func ) const
+                                          const std::tr1::shared_ptr<NeumannFuncObj<FEShape> > neumann_func ) const
   {
     libMesh::FEGenericBase<libMesh::Real>* side_fe = NULL; 
     context.get_side_fe( var, side_fe );
@@ -230,8 +230,8 @@ namespace GRINS
 
     for (unsigned int qp=0; qp != n_qpoints; qp++)
       {
-	const libMesh::Point bc_value = neumann_func->value( context, cache, qp );
-	const libMesh::Point jac_value = neumann_func->derivative( context, cache, qp );
+	const libMesh::RealGradient bc_value = neumann_func->value( context, cache, qp );
+	const libMesh::RealGradient jac_value = neumann_func->derivative( context, cache, qp );
 
 	for (unsigned int i=0; i != n_var_dofs; i++)
 	  {
@@ -269,7 +269,7 @@ namespace GRINS
 
 	    for (unsigned int qp=0; qp != n_qpoints; qp++)
 	      {
-		const libMesh::Point jac_value = neumann_func->derivative( context, cache, qp, *var2 );
+		const libMesh::RealGradient jac_value = neumann_func->derivative( context, cache, qp, *var2 );
 
 		for (unsigned int i=0; i != n_var_dofs; i++)
 		  {
@@ -291,7 +291,7 @@ namespace GRINS
                                                  const bool request_jacobian,
                                                  const VariableIndex var,
                                                  const libMesh::Real sign,
-                                                 const std::tr1::shared_ptr<NeumannFuncObj> neumann_func ) const
+                                                 const std::tr1::shared_ptr<NeumannFuncObj<FEShape> > neumann_func ) const
   {
     libMesh::FEGenericBase<libMesh::Real>* side_fe = NULL; 
     context.get_side_fe( var, side_fe );
@@ -374,7 +374,7 @@ namespace GRINS
                                                               const bool request_jacobian,
                                                               const VariableIndex var,
                                                               const libMesh::Real sign,
-                                                              const std::tr1::shared_ptr<NeumannFuncObj> neumann_func ) const
+                                                              const std::tr1::shared_ptr<NeumannFuncObj<FEShape> > neumann_func ) const
   {
     libMesh::FEGenericBase<libMesh::Real>* side_fe = NULL; 
     context.get_side_fe( var, side_fe );
@@ -464,7 +464,7 @@ namespace GRINS
                                                        const bool request_jacobian,
                                                        const VariableIndex var,
                                                        const libMesh::Real sign,
-                                                       std::tr1::shared_ptr<NeumannFuncObj> neumann_func ) const
+                                                       std::tr1::shared_ptr<NeumannFuncObj<FEShape> > neumann_func ) const
   {
     libMesh::FEGenericBase<libMesh::Real>* side_fe = NULL; 
     context.get_side_fe( var, side_fe );
@@ -492,8 +492,8 @@ namespace GRINS
 
     for (unsigned int qp=0; qp != n_qpoints; qp++)
       {
-	const libMesh::Point bc_value = neumann_func->value( context, cache, qp );
-	const libMesh::Point jac_value = neumann_func->derivative( context, cache, qp );
+	const libMesh::RealGradient bc_value = neumann_func->value( context, cache, qp );
+	const libMesh::RealGradient jac_value = neumann_func->derivative( context, cache, qp );
 
 	const libMesh::Number r = var_qpoint[qp](0);
 
@@ -535,7 +535,7 @@ namespace GRINS
 	      {
 		const libMesh::Number r = var_qpoint[qp](0);
 
-		const libMesh::Point jac_value = neumann_func->derivative( context, cache, qp, *var2 );
+		const libMesh::RealGradient jac_value = neumann_func->derivative( context, cache, qp, *var2 );
 
 		for (unsigned int i=0; i != n_var_dofs; i++)
 		  {
@@ -623,17 +623,17 @@ template void GRINS::BoundaryConditions::apply_neumann_normal_axisymmetric<libMe
 
 
 
-template void GRINS::BoundaryConditions::apply_neumann<libMesh::Real>(libMesh::FEMContext&, const GRINS::CachedValues&, const bool, const GRINS::VariableIndex, const libMesh::Real, std::tr1::shared_ptr<GRINS::NeumannFuncObj>) const;
-template void GRINS::BoundaryConditions::apply_neumann<libMesh::RealGradient>(libMesh::FEMContext&, const GRINS::CachedValues&, const bool, const GRINS::VariableIndex, const libMesh::Real, std::tr1::shared_ptr<GRINS::NeumannFuncObj>) const;
+template void GRINS::BoundaryConditions::apply_neumann<libMesh::Real>(libMesh::FEMContext&, const GRINS::CachedValues&, const bool, const GRINS::VariableIndex, const libMesh::Real, std::tr1::shared_ptr<GRINS::NeumannFuncObj<libMesh::Real> >) const;
+template void GRINS::BoundaryConditions::apply_neumann<libMesh::RealGradient>(libMesh::FEMContext&, const GRINS::CachedValues&, const bool, const GRINS::VariableIndex, const libMesh::Real, std::tr1::shared_ptr<GRINS::NeumannFuncObj<libMesh::RealGradient> >) const;
 
-template void GRINS::BoundaryConditions::apply_neumann_axisymmetric<libMesh::Real>(libMesh::FEMContext&, const GRINS::CachedValues&, const bool, const GRINS::VariableIndex, const libMesh::Real, std::tr1::shared_ptr<GRINS::NeumannFuncObj>) const;
-template void GRINS::BoundaryConditions::apply_neumann_axisymmetric<libMesh::RealGradient>(libMesh::FEMContext&, const GRINS::CachedValues&, const bool, const GRINS::VariableIndex, const libMesh::Real, std::tr1::shared_ptr<GRINS::NeumannFuncObj>) const;
+template void GRINS::BoundaryConditions::apply_neumann_axisymmetric<libMesh::Real>(libMesh::FEMContext&, const GRINS::CachedValues&, const bool, const GRINS::VariableIndex, const libMesh::Real, std::tr1::shared_ptr<GRINS::NeumannFuncObj<libMesh::Real> >) const;
+template void GRINS::BoundaryConditions::apply_neumann_axisymmetric<libMesh::RealGradient>(libMesh::FEMContext&, const GRINS::CachedValues&, const bool, const GRINS::VariableIndex, const libMesh::Real, std::tr1::shared_ptr<GRINS::NeumannFuncObj<libMesh::RealGradient> >) const;
 
-template void GRINS::BoundaryConditions::apply_neumann_normal<libMesh::Real>(libMesh::FEMContext&, const GRINS::CachedValues&, const bool, const GRINS::VariableIndex, const libMesh::Real, std::tr1::shared_ptr<GRINS::NeumannFuncObj>) const;
-template void GRINS::BoundaryConditions::apply_neumann_normal<libMesh::RealGradient>(libMesh::FEMContext&, const GRINS::CachedValues&, const bool, const GRINS::VariableIndex, const libMesh::Real, std::tr1::shared_ptr<GRINS::NeumannFuncObj>) const;
+template void GRINS::BoundaryConditions::apply_neumann_normal<libMesh::Real>(libMesh::FEMContext&, const GRINS::CachedValues&, const bool, const GRINS::VariableIndex, const libMesh::Real, std::tr1::shared_ptr<GRINS::NeumannFuncObj<libMesh::Real> >) const;
+template void GRINS::BoundaryConditions::apply_neumann_normal<libMesh::RealGradient>(libMesh::FEMContext&, const GRINS::CachedValues&, const bool, const GRINS::VariableIndex, const libMesh::Real, std::tr1::shared_ptr<GRINS::NeumannFuncObj<libMesh::RealGradient> >) const;
 
-template void GRINS::BoundaryConditions::apply_neumann_normal_axisymmetric<libMesh::Real>(libMesh::FEMContext&, const GRINS::CachedValues&, const bool, const GRINS::VariableIndex, const libMesh::Real, std::tr1::shared_ptr<GRINS::NeumannFuncObj>) const;
-template void GRINS::BoundaryConditions::apply_neumann_normal_axisymmetric<libMesh::RealGradient>(libMesh::FEMContext&, const GRINS::CachedValues&, const bool, const GRINS::VariableIndex, const libMesh::Real, std::tr1::shared_ptr<GRINS::NeumannFuncObj>) const;
+template void GRINS::BoundaryConditions::apply_neumann_normal_axisymmetric<libMesh::Real>(libMesh::FEMContext&, const GRINS::CachedValues&, const bool, const GRINS::VariableIndex, const libMesh::Real, std::tr1::shared_ptr<GRINS::NeumannFuncObj<libMesh::Real> >) const;
+template void GRINS::BoundaryConditions::apply_neumann_normal_axisymmetric<libMesh::RealGradient>(libMesh::FEMContext&, const GRINS::CachedValues&, const bool, const GRINS::VariableIndex, const libMesh::Real, std::tr1::shared_ptr<GRINS::NeumannFuncObj<libMesh::RealGradient> >) const;
 
 template void GRINS::BoundaryConditions::pin_value<libMesh::Real>( libMesh::FEMContext&, const GRINS::CachedValues&, const bool, const GRINS::VariableIndex, const double, const libMesh::Point&, const double);
 template void GRINS::BoundaryConditions::pin_value<libMesh::RealGradient>( libMesh::FEMContext&, const GRINS::CachedValues&, const bool, const GRINS::VariableIndex, const double, const libMesh::Point&, const double);
