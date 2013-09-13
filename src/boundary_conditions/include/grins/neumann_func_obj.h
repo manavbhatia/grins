@@ -29,6 +29,7 @@
 #define GRINS_NEUMANN_FUNC_OBJ_H
 
 // GRINS
+#include "grins/neumann_func_obj_base.h"
 #include "grins/var_typedefs.h"
 
 // libMesh
@@ -50,7 +51,7 @@ namespace GRINS
 
   //! Base class for general, non-constant Neumann boundary conditions
   template<typename FEShape = libMesh::Real>
-  class NeumannFuncObj
+  class NeumannFuncObj : public NeumannFuncObjBase
   {
   public:
     
@@ -108,12 +109,6 @@ namespace GRINS
     virtual FEShape normal_derivative( const libMesh::FEMContext& context, const CachedValues& cache,
                                        const unsigned int qp, 
                                        const GRINS::VariableIndex jac_var );
-
-    const std::vector<VariableIndex>& get_other_jac_vars();
-
-  protected:
-
-    std::vector<VariableIndex> _jac_vars;
 
   }; // class NeumannFuncObj
   

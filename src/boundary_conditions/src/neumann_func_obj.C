@@ -40,6 +40,7 @@ namespace GRINS
 {
   template<typename FEShape>
   NeumannFuncObj<FEShape>::NeumannFuncObj( )
+    : NeumannFuncObjBase()
   {
     return;
   }
@@ -52,8 +53,8 @@ namespace GRINS
 
   template<typename FEShape>
   typename NeumannFuncObj<FEShape>::OutputType NeumannFuncObj<FEShape>::value( const libMesh::FEMContext&,
-                                                                      const CachedValues&,
-                                                                      const unsigned int )
+                                                                               const CachedValues&,
+                                                                               const unsigned int )
   {
     // By default, does nothing.
     /* \todo Should we libmesh_error() instead?*/
@@ -62,8 +63,8 @@ namespace GRINS
 
   template<typename FEShape>
   FEShape NeumannFuncObj<FEShape>::normal_value( const libMesh::FEMContext&,
-					      const CachedValues&,
-					      const unsigned int )
+                                                 const CachedValues&,
+                                                 const unsigned int )
   {
     // By default, does nothing.
     /* \todo Should we libmesh_error() instead?*/
@@ -72,8 +73,8 @@ namespace GRINS
 
   template<typename FEShape>
   typename NeumannFuncObj<FEShape>::OutputType NeumannFuncObj<FEShape>::derivative( const libMesh::FEMContext&,
-                                                                  const CachedValues&,
-                                                                  const unsigned int )
+                                                                                    const CachedValues&,
+                                                                                    const unsigned int )
   {
     // By default, does nothing.
     /* \todo Should we libmesh_error() instead?*/
@@ -82,9 +83,9 @@ namespace GRINS
 
   template<typename FEShape>
   typename NeumannFuncObj<FEShape>::OutputType NeumannFuncObj<FEShape>::derivative( const libMesh::FEMContext&,
-                                                                  const CachedValues&,
-                                                                  const unsigned int,
-                                                                  const VariableIndex )
+                                                                                    const CachedValues&,
+                                                                                    const unsigned int,
+                                                                                    const VariableIndex )
   {
     // By default, does nothing.
     /* \todo Should we libmesh_error() instead?*/
@@ -94,8 +95,8 @@ namespace GRINS
 
   template<typename FEShape>
   FEShape NeumannFuncObj<FEShape>::normal_derivative( const libMesh::FEMContext&,
-						   const CachedValues&,
-						   const unsigned )
+                                                      const CachedValues&,
+                                                      const unsigned )
   {
     // By default, does nothing.
     /* \todo Should we libmesh_error() instead?*/
@@ -104,20 +105,15 @@ namespace GRINS
 
   template<typename FEShape>
   FEShape NeumannFuncObj<FEShape>::normal_derivative( const libMesh::FEMContext&,
-						   const CachedValues&,
-						   const unsigned int, 
-						   const VariableIndex )
+                                                      const CachedValues&,
+                                                      const unsigned int, 
+                                                      const VariableIndex )
   {
     // By default, does nothing.
     /* \todo Should we libmesh_error() instead?*/
     return FEShape();
   }
-
-  template<typename FEShape>
-  const std::vector<VariableIndex>& NeumannFuncObj<FEShape>::get_other_jac_vars()
-  {
-    return _jac_vars;
-  }
+  
 
 } // namespace GRINS
 
