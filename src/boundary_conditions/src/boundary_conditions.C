@@ -208,7 +208,9 @@ namespace GRINS
                                           const libMesh::Real sign,
                                           const std::tr1::shared_ptr<NeumannFuncObj<FEShape> > neumann_func ) const
   {
-    libMesh::FEGenericBase<libMesh::Real>* side_fe = NULL; 
+    typedef typename NeumannFuncObj<FEShape>::OutputType OutputType;
+
+    libMesh::FEGenericBase<FEShape>* side_fe = NULL; 
     context.get_side_fe( var, side_fe );
 
     // The number of local degrees of freedom
@@ -218,7 +220,7 @@ namespace GRINS
     const std::vector<libMesh::Real> &JxW_side = side_fe->get_JxW();
 
     // The var shape functions at side quadrature points.
-    const std::vector<std::vector<libMesh::Real> >& var_phi_side =
+    const std::vector<std::vector<FEShape> >& var_phi_side =
       side_fe->get_phi();
 
     const std::vector<libMesh::Point> &normals = side_fe->get_normals();
@@ -230,8 +232,8 @@ namespace GRINS
 
     for (unsigned int qp=0; qp != n_qpoints; qp++)
       {
-	const libMesh::RealGradient bc_value = neumann_func->value( context, cache, qp );
-	const libMesh::RealGradient jac_value = neumann_func->derivative( context, cache, qp );
+	const OutputType bc_value = neumann_func->value( context, cache, qp );
+	const OutputType jac_value = neumann_func->derivative( context, cache, qp );
 
 	for (unsigned int i=0; i != n_var_dofs; i++)
 	  {
@@ -241,8 +243,8 @@ namespace GRINS
 	      {
 		for (unsigned int j=0; j != n_var_dofs; j++)
 		  {
-		    K_var(i,j) += sign*JxW_side[qp]*jac_value*normals[qp]*
-		      var_phi_side[i][qp]*var_phi_side[j][qp];
+		    K_var(i,j) += sign*JxW_side[qp]*(jac_value*normals[qp])*
+		      (var_phi_side[i][qp]*var_phi_side[j][qp]);
 		  }
 	      }
 	  }
@@ -258,18 +260,18 @@ namespace GRINS
 	     var2 != other_jac_vars.end();
 	     var2++ )
 	  {
-            libMesh::FEGenericBase<libMesh::Real>* side_fe2 = NULL; 
+            libMesh::FEGenericBase<FEShape>* side_fe2 = NULL; 
             context.get_side_fe( *var2, side_fe2 );
 
             libMesh::DenseSubMatrix<libMesh::Number> &K_var2 = context.get_elem_jacobian(var,*var2); // jacobian
 
 	    const unsigned int n_var2_dofs = context.get_dof_indices(*var2).size();
-	    const std::vector<std::vector<libMesh::Real> >& var2_phi_side =
+	    const std::vector<std::vector<FEShape> >& var2_phi_side =
 	      side_fe2->get_phi();
 
 	    for (unsigned int qp=0; qp != n_qpoints; qp++)
 	      {
-		const libMesh::RealGradient jac_value = neumann_func->derivative( context, cache, qp, *var2 );
+		const OutputType jac_value = neumann_func->derivative( context, cache, qp, *var2 );
 
 		for (unsigned int i=0; i != n_var_dofs; i++)
 		  {
@@ -376,7 +378,9 @@ namespace GRINS
                                                               const libMesh::Real sign,
                                                               const std::tr1::shared_ptr<NeumannFuncObj<FEShape> > neumann_func ) const
   {
-    libMesh::FEGenericBase<libMesh::Real>* side_fe = NULL; 
+    typedef typename NeumannFuncObj<FEShape>::OutputType OutputType;
+
+    libMesh::FEGenericBase<FEShape>* side_fe = NULL; 
     context.get_side_fe( var, side_fe );
 
     // The number of local degrees of freedom
@@ -386,7 +390,7 @@ namespace GRINS
     const std::vector<libMesh::Real> &JxW_side = side_fe->get_JxW();
 
     // The var shape functions at side quadrature points.
-    const std::vector<std::vector<libMesh::Real> >& var_phi_side = side_fe->get_phi();
+    const std::vector<std::vector<FEShape> >& var_phi_side = side_fe->get_phi();
 
     // Physical location of the quadrature points
     const std::vector<libMesh::Point>& var_qpoint = side_fe->get_xyz();
@@ -398,8 +402,8 @@ namespace GRINS
 
     for (unsigned int qp=0; qp != n_qpoints; qp++)
       {
-	const libMesh::Real bc_value = neumann_func->normal_value( context, cache, qp );
-	const libMesh::Real jac_value = neumann_func->normal_derivative( context, cache, qp );
+	const OutputType bc_value = neumann_func->normal_value( context, cache, qp );
+	const OutputType jac_value = neumann_func->normal_derivative( context, cache, qp );
 
         const libMesh::Number r = var_qpoint[qp](0);
 
@@ -428,7 +432,7 @@ namespace GRINS
 	     var2 != other_jac_vars.end();
 	     var2++ )
 	  {
-            libMesh::FEGenericBase<libMesh::Real>* side_fe2 = NULL; 
+            libMesh::FEGenericBase<FEShape>* side_fe2 = NULL; 
             context.get_side_fe( *var2, side_fe2 );
 
             libMesh::DenseSubMatrix<libMesh::Number> &K_var2 = context.get_elem_jacobian(var,*var2); // jacobian
@@ -439,7 +443,7 @@ namespace GRINS
 
 	    for (unsigned int qp=0; qp != n_qpoints; qp++)
 	      {
-		const libMesh::Real jac_value = neumann_func->normal_derivative( context, cache, qp, *var2 );
+		const OutputType jac_value = neumann_func->normal_derivative( context, cache, qp, *var2 );
 
                 const libMesh::Number r = var_qpoint[qp](0);
 
@@ -466,7 +470,9 @@ namespace GRINS
                                                        const libMesh::Real sign,
                                                        std::tr1::shared_ptr<NeumannFuncObj<FEShape> > neumann_func ) const
   {
-    libMesh::FEGenericBase<libMesh::Real>* side_fe = NULL; 
+    typedef typename NeumannFuncObj<FEShape>::OutputType OutputType;
+
+    libMesh::FEGenericBase<FEShape>* side_fe = NULL; 
     context.get_side_fe( var, side_fe );
 
     // The number of local degrees of freedom
@@ -476,7 +482,7 @@ namespace GRINS
     const std::vector<libMesh::Real> &JxW_side = side_fe->get_JxW();
 
     // The var shape functions at side quadrature points.
-    const std::vector<std::vector<libMesh::Real> >& var_phi_side =
+    const std::vector<std::vector<FEShape> >& var_phi_side =
       side_fe->get_phi();
 
     // Physical location of the quadrature points
@@ -492,8 +498,8 @@ namespace GRINS
 
     for (unsigned int qp=0; qp != n_qpoints; qp++)
       {
-	const libMesh::RealGradient bc_value = neumann_func->value( context, cache, qp );
-	const libMesh::RealGradient jac_value = neumann_func->derivative( context, cache, qp );
+	const OutputType bc_value = neumann_func->value( context, cache, qp );
+	const OutputType jac_value = neumann_func->derivative( context, cache, qp );
 
 	const libMesh::Number r = var_qpoint[qp](0);
 
@@ -522,20 +528,20 @@ namespace GRINS
 	     var2 != other_jac_vars.end();
 	     var2++ )
 	  {
-            libMesh::FEGenericBase<libMesh::Real>* side_fe2 = NULL; 
+            libMesh::FEGenericBase<FEShape>* side_fe2 = NULL; 
             context.get_side_fe( *var2, side_fe2 );
 
             libMesh::DenseSubMatrix<libMesh::Number> &K_var2 = context.get_elem_jacobian(var,*var2); // jacobian
 
 	    const unsigned int n_var2_dofs = context.get_dof_indices(*var2).size();
-	    const std::vector<std::vector<libMesh::Real> >& var2_phi_side =
+	    const std::vector<std::vector<FEShape> >& var2_phi_side =
               side_fe2->get_phi();
 
 	    for (unsigned int qp=0; qp != n_qpoints; qp++)
 	      {
 		const libMesh::Number r = var_qpoint[qp](0);
 
-		const libMesh::RealGradient jac_value = neumann_func->derivative( context, cache, qp, *var2 );
+		const OutputType jac_value = neumann_func->derivative( context, cache, qp, *var2 );
 
 		for (unsigned int i=0; i != n_var_dofs; i++)
 		  {
